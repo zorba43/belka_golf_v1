@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Belka Golf Residence</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #0a1a0c; }
+
+    /* ─── VIDEO ARKA PLAN ─────────────────── */
+    #bg-video {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: blur(3px) brightness(0.55) saturate(0.85);
+      transform: scale(1.06);
+      z-index: 0;
+    }
+
+    /* ─── OVERLAY GRADİENT ────────────────── */
+    #overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      background:
+        radial-gradient(ellipse at center, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 100%),
+        linear-gradient(to bottom,
+          rgba(10,26,12,0.45) 0%,
+          rgba(0,0,0,0.10) 45%,
+          rgba(10,26,12,0.65) 100%
+        );
+    }
+
+    /* ─── CONTENT ─────────────────────────── */
+    #content {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+    }
+
+    /* ─── ÜSTTEN SÜZÜLEN YAZI ─────────────── */
+    .slide-wrap {
+      overflow: hidden;
+      margin-bottom: 0;
+    }
+
+    .welcome-line {
+      display: block;
+      font-family: 'Jost', sans-serif;
+      font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+      font-weight: 400;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.65);
+      transform: translateY(-60px);
+      opacity: 0;
+      animation: slideDown 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.6s forwards;
+      margin-bottom: 18px;
+    }
+
+    .main-line-1 {
+      display: block;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 8vw, 7rem);
+      font-weight: 300;
+      color: #ffffff;
+      line-height: 1;
+      letter-spacing: 0.04em;
+      transform: translateY(-80px);
+      opacity: 0;
+      animation: slideDown 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.85s forwards;
+      text-shadow: 0 4px 40px rgba(0,0,0,0.4);
+    }
+
+    .main-line-2 {
+      display: block;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 8vw, 7rem);
+      font-weight: 600;
+      font-style: italic;
+      color: #d4a85a;
+      line-height: 1;
+      letter-spacing: 0.04em;
+      transform: translateY(-80px);
+      opacity: 0;
+      animation: slideDown 1.2s cubic-bezier(0.22, 1, 0.36, 1) 1.05s forwards;
+      text-shadow: 0 4px 40px rgba(0,0,0,0.4);
+      margin-bottom: 8px;
+    }
+
+    .main-line-3 {
+      display: block;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 6.5vw, 5.8rem);
+      font-weight: 300;
+      color: #ffffff;
+      line-height: 1;
+      letter-spacing: 0.06em;
+      transform: translateY(-80px);
+      opacity: 0;
+      animation: slideDown 1.2s cubic-bezier(0.22, 1, 0.36, 1) 1.2s forwards;
+      text-shadow: 0 4px 40px rgba(0,0,0,0.4);
+    }
+
+    /* Altın çizgi */
+    .gold-sep {
+      width: 0px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #d4a85a, transparent);
+      margin: 28px auto;
+      animation: expandLine 1s cubic-bezier(0.22, 1, 0.36, 1) 1.6s forwards;
+    }
+
+    /* Alt yazı */
+    .sub-line {
+      font-family: 'Jost', sans-serif;
+      font-size: clamp(0.65rem, 1.2vw, 0.78rem);
+      font-weight: 300;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      transform: translateY(-30px);
+      opacity: 0;
+      animation: slideDown 1s cubic-bezier(0.22, 1, 0.36, 1) 1.8s forwards;
+    }
+
+    /* ─── ENTER BUTONU ────────────────────── */
+    #enter-btn {
+      position: fixed;
+      bottom: 52px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      z-index: 3;
+      opacity: 0;
+      animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 2.4s forwards;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .enter-text {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+      transition: color 0.3s;
+    }
+
+    #enter-btn:hover .enter-text { color: #d4a85a; }
+
+    .enter-arrow {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      animation: bounce 2s ease-in-out 3s infinite;
+    }
+
+    #enter-btn:hover .enter-arrow {
+      border-color: #d4a85a;
+      background: rgba(212,168,90,0.15);
+    }
+
+    .enter-arrow svg { transition: transform 0.3s; }
+    #enter-btn:hover .enter-arrow svg { transform: translateY(2px); }
+
+    /* ─── LOGO SOL ÜST ────────────────────── */
+    #logo {
+      position: fixed;
+      top: 28px;
+      left: 36px;
+      z-index: 3;
+      opacity: 0;
+      animation: fadeIn 1s ease 2s forwards;
+    }
+    .logo-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: white;
+      letter-spacing: 0.06em;
+      line-height: 1;
+    }
+    .logo-sub {
+      font-size: 0.55rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #d4a85a;
+      margin-top: 3px;
+      display: block;
+    }
+
+    /* ─── SAĞ ÜST BİLGİ ──────────────────── */
+    #top-right {
+      position: fixed;
+      top: 28px;
+      right: 36px;
+      z-index: 3;
+      opacity: 0;
+      animation: fadeIn 1s ease 2.2s forwards;
+      text-align: right;
+    }
+    .tr-item {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.8;
+    }
+    .tr-item span { color: rgba(255,255,255,0.75); font-weight: 500; }
+
+    /* ─── GEÇİŞ EFEKTİ ───────────────────── */
+    #transition {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #0a1a0c;
+      pointer-events: none;
+      opacity: 0;
+    }
+    #transition.go {
+      animation: fadeToBlack 0.9s cubic-bezier(0.4, 0, 1, 1) forwards;
+    }
+
+    /* ─── ANİMASYONLAR ────────────────────── */
+    @keyframes slideDown {
+      from { transform: translateY(-70px); opacity: 0; }
+      to   { transform: translateY(0);     opacity: 1; }
+    }
+    @keyframes fadeUp {
+      from { transform: translateX(-50%) translateY(20px); opacity: 0; }
+      to   { transform: translateX(-50%) translateY(0);    opacity: 1; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes expandLine {
+      from { width: 0px; }
+      to   { width: 180px; }
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(5px); }
+    }
+    @keyframes fadeToBlack {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ─── MOBİL ───────────────────────────── */
+    @media (max-width: 640px) {
+      #logo { top: 20px; left: 20px; }
+      #top-right { display: none; }
+      #enter-btn { bottom: 36px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- GEÇİŞ KAPATMA EKRANı -->
+  <div id="transition"></div>
+
+  <!-- VİDEO ARKA PLAN -->
+  <video
+    id="bg-video"
+    autoplay
+    muted
+    playsinline
+    preload="auto"
+    aria-hidden="true"
+  >
+    <!--
+      ⬇️ BURAYA KENDİ VIDEO YOLUNU YAZ
+      Örnek: src="video/golf-intro.webm"
+      Dosyayı HTML ile aynı klasöre koy
+    -->
+    <source src="golf-intro.webm" type="video/webm" />
+
+    <!-- Yedek MP4 varsa ekle -->
+    <!-- <source src="golf-intro.mp4" type="video/mp4" /> -->
+  </video>
+
+  <!-- OVERLAY -->
+  <div id="overlay"></div>
+
+  <!-- SOL ÜST LOGO -->
+  <div id="logo">
+    <div class="logo-name">Belka Golf Residence</div>
+    <span class="logo-sub">Belek · Antalya</span>
+  </div>
+
+  <!-- SAĞ ÜST BİLGİ -->
+  <div id="top-right">
+    <div class="tr-item">Puan <span>4.8 ★</span></div>
+    <div class="tr-item">Golf Sahası <span>3 dk</span></div>
+    <div class="tr-item">WhatsApp <span>+90 532 262 27 73</span></div>
+  </div>
+
+  <!-- ANA İÇERİK -->
+  <div id="content">
+    <div class="slide-wrap">
+      <span class="welcome-line">Welcome to</span>
+    </div>
+    <div class="slide-wrap">
+      <span class="main-line-1">Belka</span>
+    </div>
+    <div class="slide-wrap">
+      <span class="main-line-2">Golf</span>
+    </div>
+    <div class="slide-wrap">
+      <span class="main-line-3">Residence</span>
+    </div>
+    <div class="gold-sep"></div>
+    <div class="slide-wrap">
+      <span class="sub-line">Belek · Antalya · Türkiye</span>
+    </div>
+  </div>
+
+  <!-- ENTER BUTONU -->
+  <a href="index.html" id="enter-btn" aria-label="Siteye Gir">
+    <span class="enter-text">Keşfet</span>
+    <div class="enter-arrow">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M7 2L7 12M7 12L3 8M7 12L11 8"
+              stroke="white" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </a>
+
+  <script>
+    const video  = document.getElementById('bg-video');
+    const trans  = document.getElementById('transition');
+    const btn    = document.getElementById('enter-btn');
+
+    // Video bittiğinde otomatik geçiş
+    video.addEventListener('ended', () => {
+      goToSite();
+    });
+
+    // Butona tıklayınca da geçiş
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      goToSite();
+    });
+
+    function goToSite() {
+      trans.classList.add('go');
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 900);
+    }
+
+    // Video yüklenemezse (geliştirme ortamı) 6 saniye sonra yine de geç
+    setTimeout(() => {
+      if (video.readyState === 0) {
+        // Video yoksa arka planı gradient yap
+        video.style.display = 'none';
+        document.body.style.background =
+          'linear-gradient(135deg, #0a1a0c 0%, #1a3d1e 40%, #0d2410 100%)';
+      }
+    }, 2000);
+  </script>
+</body>
+</html>
