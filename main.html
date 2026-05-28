@@ -1405,16 +1405,31 @@
         <label class="bb-label" data-i18n="bb_checkout">ÇIKIŞ</label>
         <input type="date" id="bb-checkout" class="bb-input"/>
       </div>
-      <div class="bb-field">
+      <div class="bb-field" style="min-width:200px;">
         <label class="bb-label" data-i18n="bb_guests">MİSAFİR</label>
-        <select id="bb-guests" class="bb-select">
-          <option value="1" data-guest-count="1">1 Yetişkin</option>
-          <option value="2" data-guest-count="2" selected>2 Yetişkin</option>
-          <option value="3" data-guest-count="3">3 Yetişkin</option>
-          <option value="4" data-guest-count="4">4 Yetişkin</option>
-          <option value="5" data-guest-count="5">5 Yetişkin</option>
-          <option value="6" data-guest-count="6">6 Yetişkin</option>
-        </select>
+        <!-- hidden input used by render() -->
+        <input type="hidden" id="bb-guests" value="2"/>
+        <input type="hidden" id="bb-children" value="2"/>
+        <div id="bb-guest-box" style="border-bottom:1px solid #d8d2c4;padding:6px 0 10px;display:flex;flex-direction:column;gap:8px;">
+          <!-- Yetişkin -->
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+            <span style="font-size:0.82rem;color:#4a4a4a;font-family:'Jost',sans-serif;" data-i18n="lbl_adult">Yetişkin</span>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <button type="button" onclick="bbGuest('adult',-1)" style="width:24px;height:24px;border:1px solid #d8d2c4;background:transparent;cursor:pointer;font-size:1rem;color:#1a1a1a;display:flex;align-items:center;justify-content:center;border-radius:2px;transition:all .15s;" onmouseover="this.style.borderColor='#b8923a'" onmouseout="this.style.borderColor='#d8d2c4'">−</button>
+              <span id="bb-adult-val" style="font-size:0.92rem;font-weight:500;color:#1a1a1a;min-width:16px;text-align:center;font-family:'Jost',sans-serif;">2</span>
+              <button type="button" onclick="bbGuest('adult',+1)" style="width:24px;height:24px;border:1px solid #d8d2c4;background:transparent;cursor:pointer;font-size:1rem;color:#1a1a1a;display:flex;align-items:center;justify-content:center;border-radius:2px;transition:all .15s;" onmouseover="this.style.borderColor='#b8923a'" onmouseout="this.style.borderColor='#d8d2c4'">+</button>
+            </div>
+          </div>
+          <!-- Çocuk -->
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+            <span style="font-size:0.82rem;color:#4a4a4a;font-family:'Jost',sans-serif;" data-i18n="lbl_child">Çocuk</span>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <button type="button" onclick="bbGuest('child',-1)" style="width:24px;height:24px;border:1px solid #d8d2c4;background:transparent;cursor:pointer;font-size:1rem;color:#1a1a1a;display:flex;align-items:center;justify-content:center;border-radius:2px;transition:all .15s;" onmouseover="this.style.borderColor='#b8923a'" onmouseout="this.style.borderColor='#d8d2c4'">−</button>
+              <span id="bb-child-val" style="font-size:0.92rem;font-weight:500;color:#1a1a1a;min-width:16px;text-align:center;font-family:'Jost',sans-serif;">2</span>
+              <button type="button" onclick="bbGuest('child',+1)" style="width:24px;height:24px;border:1px solid #d8d2c4;background:transparent;cursor:pointer;font-size:1rem;color:#1a1a1a;display:flex;align-items:center;justify-content:center;border-radius:2px;transition:all .15s;" onmouseover="this.style.borderColor='#b8923a'" onmouseout="this.style.borderColor='#d8d2c4'">+</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1543,7 +1558,7 @@
   function render() {
     var room = document.getElementById('bb-room').value;
     var n = nights();
-    var g = parseInt(document.getElementById('bb-guests').value)||1;
+    var g = parseInt(document.getElementById('bb-guests').value)||2;
     var bkf = document.getElementById('bb-breakfast').checked;
     var trf = document.getElementById('bb-transfer').checked;
     var lang = document.documentElement.lang||'tr';
@@ -1600,7 +1615,16 @@
   }
 
   /* Varsayılan tarihler + wire up events */
-  window.addEventListener('DOMContentLoaded', function(){
+  /* ── Misafir Sayacı ── */
+  function bbGuest(type, delta) {
+    var hiddenId = type === 'adult' ? 'bb-guests' : 'bb-children';
+    var valId    = type === 'adult' ? 'bb-adult-val' : 'bb-child-val';
+    var cur = parseInt(document.getElementById(hiddenId).value) || 2;
+    var next = Math.min(6, Math.max(0, cur + delta));
+    document.getElementById(hiddenId).value = next;
+    document.getElementById(valId).textContent = next;
+    render();
+  }
     var today = new Date();
     var checkout = new Date(); checkout.setDate(today.getDate()+1);
     var fmt = function(d){ return d.toISOString().slice(0,10); };
@@ -1609,7 +1633,7 @@
     if(ci && !ci.value) ci.value = fmt(today);
     if(co && !co.value) co.value = fmt(checkout);
 
-    ['bb-room','bb-checkin','bb-checkout','bb-guests','bb-breakfast','bb-transfer'].forEach(function(id){
+    ['bb-room','bb-checkin','bb-checkout','bb-breakfast','bb-transfer'].forEach(function(id){
       var el = document.getElementById(id);
       if(el) el.addEventListener('change', render);
     });
@@ -1630,7 +1654,7 @@
     var ci = document.getElementById('bb-checkin').value;
     var co = document.getElementById('bb-checkout').value;
     var n = nights();
-    var g = parseInt(document.getElementById('bb-guests').value)||1;
+    var g = parseInt(document.getElementById('bb-guests').value)||2;
     var bkf = document.getElementById('bb-breakfast').checked;
     var trf = document.getElementById('bb-transfer').checked;
     var method = (document.querySelector('input[name="bb-pay"]:checked')||{value:'havale'}).value;
@@ -2808,7 +2832,7 @@
 
     const room = roomEl.value;
     const nights = bbNights();
-    const guests = parseInt(document.getElementById('bb-guests').value) || 1;
+    const guests = parseInt(document.getElementById('bb-guests').value) || 2;
     const breakfast = document.getElementById('bb-breakfast').checked;
     const transfer = document.getElementById('bb-transfer').checked;
     const lang = document.documentElement.lang || 'tr';
@@ -2868,7 +2892,7 @@
     const ci = document.getElementById('bb-checkin').value;
     const co = document.getElementById('bb-checkout').value;
     const nights = bbNights();
-    const guests = parseInt(document.getElementById('bb-guests').value) || 1;
+    const guests = parseInt(document.getElementById('bb-guests').value) || 2;
     const breakfast = document.getElementById('bb-breakfast').checked;
     const transfer = document.getElementById('bb-transfer').checked;
     const methodEl = document.querySelector('input[name="bb-pay"]:checked');
