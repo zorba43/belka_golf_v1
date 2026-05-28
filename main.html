@@ -1628,6 +1628,22 @@
       var el = document.getElementById(id);
       if(el) el.addEventListener('change', render);
     });
+
+    /* Giriş seçilince çıkışı otomatik +1 gün yap */
+    var ciEl = document.getElementById('bb-checkin');
+    var coEl = document.getElementById('bb-checkout');
+    if(ciEl) ciEl.addEventListener('change', function(){
+      if(this.value) {
+        var next = new Date(this.value);
+        next.setDate(next.getDate() + 1);
+        var nextStr = next.toISOString().slice(0,10);
+        /* Sadece çıkış boşsa veya girişten küçükse güncelle */
+        if(!coEl.value || coEl.value <= this.value) {
+          coEl.value = nextStr;
+          coEl.dispatchEvent(new Event('change'));
+        }
+      }
+    });
     document.querySelectorAll('input[name="bb-pay"]').forEach(function(el){
       el.addEventListener('change', render);
     });
