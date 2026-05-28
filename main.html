@@ -1392,9 +1392,9 @@
       <div class="bb-field bb-field-wide">
         <label class="bb-label" data-i18n="bb_room">ODA TİPİ</label>
         <select id="bb-room" class="bb-select">
-          <option value="1+1" data-eur="85">1+1 Exclusive Poolside · 85€</option>
-          <option value="2+1" data-eur="105" selected>2+1 Deluxe Poolside · 105€</option>
-          <option value="3+1" data-eur="135">3+1 Dublex Apt. · 135€</option>
+          <option value="1+1" data-eur="85">1+1 Exclusive Poolside</option>
+          <option value="2+1" data-eur="105" selected>2+1 Deluxe Poolside</option>
+          <option value="3+1" data-eur="135">3+1 Dublex Apt.</option>
         </select>
       </div>
       <div class="bb-field">
@@ -1602,7 +1602,7 @@
   /* Varsayılan tarihler + wire up events */
   window.addEventListener('DOMContentLoaded', function(){
     var today = new Date();
-    var checkout = new Date(); checkout.setDate(today.getDate()+7);
+    var checkout = new Date(); checkout.setDate(today.getDate()+1);
     var fmt = function(d){ return d.toISOString().slice(0,10); };
     var ci = document.getElementById('bb-checkin');
     var co = document.getElementById('bb-checkout');
@@ -2673,7 +2673,7 @@
       Array.from(roomSelect.options).forEach(opt => {
         const v = opt.value;
         const price = opt.getAttribute('data-eur');
-        if (rLab[v]) opt.textContent = `${rLab[v]} · ${price}€`;
+        if (rLab[v]) opt.textContent = rLab[v];
       });
     }
 
@@ -2784,7 +2784,7 @@
   (function() {
     const t = new Date();
     const tom = new Date(t);
-    tom.setDate(t.getDate() + 7);
+    tom.setDate(t.getDate() + 1);
     const fmt = d => d.toISOString().slice(0,10);
     const ci = document.getElementById('bb-checkin');
     const co = document.getElementById('bb-checkout');
