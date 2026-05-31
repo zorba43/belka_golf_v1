@@ -2694,10 +2694,10 @@ function bbGuest(type, delta) {
       b.classList.toggle('active', b.getAttribute('data-lang') === lang);
     });
 
-    // Update <html lang>
+    // Önce lang'ı güncelle, sonra render tetikle
     document.documentElement.lang = lang;
 
-    // Update guest dropdown options dynamically
+    // Özet ve misafir etiketlerini yenile
     const guestSelect = document.getElementById('bb-guests');
     if (guestSelect) {
       const opts = guestSelect.querySelectorAll('option[data-guest-count]');
