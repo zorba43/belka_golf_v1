@@ -2730,6 +2730,17 @@ function bbGuest(type, delta) {
       updateRateDisplay();
     }
 
+    // Özet ve misafir etiketlerini yenile
+    var adultEl = document.querySelector('[data-i18n="lbl_adult"]');
+    var childEl = document.querySelector('[data-i18n="lbl_child"]');
+    var lblMap = {tr:{adult:'Yetişkin',child:'Çocuk'}, en:{adult:'Adult',child:'Child'}, de:{adult:'Erwachsener',child:'Kind'}, ru:{adult:'Взрослый',child:'Ребёнок'}};
+    var lbl = lblMap[lang] || lblMap.tr;
+    if(adultEl) adultEl.textContent = lbl.adult;
+    if(childEl) childEl.textContent = lbl.child;
+
+    // Fiyat özetini dil ile güncelle
+    document.getElementById('bb-guests') && document.getElementById('bb-guests').dispatchEvent(new Event('change'));
+
     // Save preference
     try { localStorage.setItem('belka_lang', lang); } catch(e) {}
   }
