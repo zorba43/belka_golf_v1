@@ -1559,15 +1559,16 @@
     var room = document.getElementById('bb-room').value;
     var n = nights();
     var g = parseInt(document.getElementById('bb-guests').value)||2;
+    var ch = parseInt(document.getElementById('bb-children').value)||0;
     var bkf = document.getElementById('bb-breakfast').checked;
     var trf = document.getElementById('bb-transfer').checked;
     var lang = document.documentElement.lang||'tr';
     var L = {
-      tr:{r:'Oda',ni:'gece',b:'Kahvaltı',ki:'kişi',t:'Havalimanı Transferi',tot:'TOPLAM',disc:'Yaz Sezonu İndirimi'},
-      en:{r:'Room',ni:'nights',b:'Breakfast',ki:'pers',t:'Airport Transfer',tot:'TOTAL',disc:'Summer Season Discount'},
-      de:{r:'Zimmer',ni:'Nächte',b:'Frühstück',ki:'Pers',t:'Flughafentransfer',tot:'GESAMT',disc:'Sommer-Rabatt'},
-      ru:{r:'Номер',ni:'ночей',b:'Завтрак',ki:'чел',t:'Трансфер',tot:'ИТОГО',disc:'Летняя скидка'}
-    }[lang]||{r:'Oda',ni:'gece',b:'Kahvaltı',ki:'kişi',t:'Havalimanı Transferi',tot:'TOPLAM',disc:'Yaz Sezonu İndirimi'};
+      tr:{r:'Oda',ni:'gece',b:'Kahvaltı',ki:'yetişkin',child:'çocuk',t:'Havalimanı Transferi',tot:'TOPLAM',disc:'Yaz Sezonu İndirimi'},
+      en:{r:'Room',ni:'nights',b:'Breakfast',ki:'adult',child:'child',t:'Airport Transfer',tot:'TOTAL',disc:'Summer Season Discount'},
+      de:{r:'Zimmer',ni:'Nächte',b:'Frühstück',ki:'Erw.',child:'Kind',t:'Flughafentransfer',tot:'GESAMT',disc:'Sommer-Rabatt'},
+      ru:{r:'Номер',ni:'ночей',b:'Завтрак',ki:'взр.',child:'реб.',t:'Трансфер',tot:'ИТОГО',disc:'Летняя скидка'}
+    }[lang]||{r:'Oda',ni:'gece',b:'Kahvaltı',ki:'yetişkin',child:'çocuk',t:'Havalimanı Transferi',tot:'TOPLAM',disc:'Yaz Sezonu İndirimi'};
 
     // Yaz sezonu kontrolü (Haziran=5, Temmuz=6, Ağustos=7, Eylül=8)
     var ciVal = document.getElementById('bb-checkin').value;
@@ -1580,8 +1581,8 @@
     var listPrice = isSummer ? Math.round(rp / 0.70) : 0;
 
     var rt = rp*n;
-    var bt = bkf ? BREAKFAST*g*n : 0;
-    var tt = trf ? (g<=5?TR_LOW:TR_HIGH) : 0;
+    var bt = bkf ? BREAKFAST*(g+ch)*n : 0;
+    var tt = trf ? ((g+ch)<=5?TR_LOW:TR_HIGH) : 0;
     var total = rt+bt+tt;
     var totalTry = Math.round(total*eurTry);
     var tryFmt = totalTry.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
@@ -1600,7 +1601,10 @@
       html += '<div style="display:inline-flex;align-items:center;gap:6px;background:#fff8ed;border:1px solid #e8d8b0;border-radius:3px;padding:3px 10px;margin:2px 0 4px;font-size:0.72rem;color:#b8923a;font-weight:600;">✦ %30 '+L.disc+'</div>';
     }
 
-    if(bkf) html += row(L.b+' ('+g+' '+L.ki+' × '+n+')', bt);
+    var bkfLabel = ch > 0
+      ? L.b+' ('+g+' '+L.ki+' + '+ch+' '+L.child+' × '+n+' '+L.ni+')'
+      : L.b+' ('+g+' '+L.ki+' × '+n+' '+L.ni+')';
+    if(bkf) html += row(bkfLabel, bt);
     if(trf) html += row(L.t, tt);
     html += '<div style="height:1px;background:#e8d8b0;margin:6px 0;"></div>';
     html += '<div style="display:flex;justify-content:space-between;align-items:center;">'
@@ -1662,12 +1666,13 @@
     var co = document.getElementById('bb-checkout').value;
     var n = nights();
     var g = parseInt(document.getElementById('bb-guests').value)||2;
+    var ch = parseInt(document.getElementById('bb-children').value)||0;
     var bkf = document.getElementById('bb-breakfast').checked;
     var trf = document.getElementById('bb-transfer').checked;
     var method = (document.querySelector('input[name="bb-pay"]:checked')||{value:'havale'}).value;
     var rp = PRICES[room]||0;
-    var bt = bkf?BREAKFAST*g*n:0;
-    var tt = trf?(g<=5?TR_LOW:TR_HIGH):0;
+    var bt = bkf?BREAKFAST*(g+ch)*n:0;
+    var tt = trf?((g+ch)<=5?TR_LOW:TR_HIGH):0;
     var total = rp*n+bt+tt;
     var totalTry = Math.round(total*eurTry);
     if(method==='kart'){
