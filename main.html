@@ -1564,11 +1564,11 @@
     var trf = document.getElementById('bb-transfer').checked;
     var lang = document.documentElement.lang||'tr';
     var L = {
-      tr:{r:'Oda',ni:'gece',b:'Kahvaltı',ki:'yetişkin',child:'çocuk',t:'Havalimanı Transferi',tot:'TOPLAM',disc:'Yaz Sezonu İndirimi'},
-      en:{r:'Room',ni:'nights',b:'Breakfast',ki:'adult',child:'child',t:'Airport Transfer',tot:'TOTAL',disc:'Summer Season Discount'},
-      de:{r:'Zimmer',ni:'Nächte',b:'Frühstück',ki:'Erw.',child:'Kind',t:'Flughafentransfer',tot:'GESAMT',disc:'Sommer-Rabatt'},
-      ru:{r:'Номер',ni:'ночей',b:'Завтрак',ki:'взр.',child:'реб.',t:'Трансфер',tot:'ИТОГО',disc:'Летняя скидка'}
-    }[lang]||{r:'Oda',ni:'gece',b:'Kahvaltı',ki:'yetişkin',child:'çocuk',t:'Havalimanı Transferi',tot:'TOPLAM',disc:'Yaz Sezonu İndirimi'};
+      tr:{r:'Daire',ni:'gece',b:'Kahvaltı',ki:'yetişkin',child:'çocuk',t:'Havalimanı Transferi',tot:'TOPLAM',disc:'Yaz Sezonu İndirimi'},
+      en:{r:'Apartment',ni:'nights',b:'Breakfast',ki:'adult',child:'child',t:'Airport Transfer',tot:'TOTAL',disc:'Summer Discount'},
+      de:{r:'Apartment',ni:'Nächte',b:'Frühstück',ki:'Erw.',child:'Kind',t:'Flughafentransfer',tot:'GESAMT',disc:'Sommerrabatt'},
+      ru:{r:'Апартамент',ni:'ночей',b:'Завтрак',ki:'взр.',child:'реб.',t:'Трансфер',tot:'ИТОГО',disc:'Летняя скидка'}
+    }[lang]||{r:'Daire',ni:'gece',b:'Kahvaltı',ki:'yetişkin',child:'çocuk',t:'Havalimanı Transferi',tot:'TOPLAM',disc:'Yaz Sezonu İndirimi'};
 
     // Yaz sezonu kontrolü (Haziran=5, Temmuz=6, Ağustos=7, Eylül=8)
     var ciVal = document.getElementById('bb-checkin').value;
@@ -2277,6 +2277,8 @@ function bbGuest(type, delta) {
       loading_rate: "Güncel kur yükleniyor...",
       bb_breakfast_price: "+15€ / kişi / gece",
       bb_transfer_price: "45€ (≤5 kişi) / 85€ (5+ kişi)",
+      lbl_adult: "Yetişkin",
+      lbl_child: "Çocuk",
       bb_guest_singular: "Yetişkin",
       bb_guest_plural: "Yetişkin",
       bb_summary_title: "FİYAT ÖZETİ",
@@ -2399,6 +2401,8 @@ function bbGuest(type, delta) {
       loading_rate: "Loading exchange rate...",
       bb_breakfast_price: "+€15 / person / night",
       bb_transfer_price: "€45 (≤5 ppl) / €85 (5+ ppl)",
+      lbl_adult: "Adult",
+      lbl_child: "Child",
       bb_guest_singular: "Adult",
       bb_guest_plural: "Adults",
       bb_summary_title: "PRICE SUMMARY",
@@ -2521,6 +2525,8 @@ function bbGuest(type, delta) {
       loading_rate: "Wechselkurs wird geladen...",
       bb_breakfast_price: "+15€ / Person / Nacht",
       bb_transfer_price: "45€ (≤5 Pers.) / 85€ (5+)",
+      lbl_adult: "Erwachsener",
+      lbl_child: "Kind",
       bb_guest_singular: "Erwachsener",
       bb_guest_plural: "Erwachsene",
       bb_summary_title: "PREISÜBERSICHT",
@@ -2643,6 +2649,8 @@ function bbGuest(type, delta) {
       loading_rate: "Загрузка курса...",
       bb_breakfast_price: "+15€ / чел / ночь",
       bb_transfer_price: "45€ (≤5 чел) / 85€ (5+)",
+      lbl_adult: "Взрослый",
+      lbl_child: "Ребёнок",
       bb_guest_singular: "Взрослый",
       bb_guest_plural: "Взрослых",
       bb_summary_title: "ИТОГИ",
